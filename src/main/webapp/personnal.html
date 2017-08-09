@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>个人中心-慧诺教育科技</title>
+<!-- Custom Theme files -->
+<link href="css/personnal.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="css/sweetalert.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="images/index.ico"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/personnal.js"></script>
+<script type="text/javascript" src="js/sweetalert.min.js"></script>
+</head>
+<body>
+<div class="head">
+  <div class="head-text">
+    <h1>个人中心</h1>
+  </div>
+  <div class="login">
+    <div class="header">
+      <div class="text"> <img src="images/men1.png" alt="" />
+        <h2 id="nickName_h2"></h2>
+        <a href="#">
+        <p id="mail_p"></p>
+        <script>
+			var final_username = "";
+			var final_mail = "";
+			var final_nickName = "";
+			var totalcookie = document.cookie.split("; ");
+			for(i=0 ; i<totalcookie.length ; i++){
+				var findcookie = totalcookie[i].split("=");
+				if(findcookie[0] === "nickName"){
+					final_nickName = findcookie[1];
+					final_nickName = decodeURI(final_nickName);
+					final_nickName = decodeURI(final_nickName);
+				}
+				if(findcookie[0] === "username"){
+					final_username = findcookie[1];
+				}
+				if(findcookie[0] === "mail"){
+					final_mail = findcookie[1];
+				}
+			}
+			if(final_username.length==0 && final_mail.length==0 && final_nickName.length==0){
+				alert("您的登录信息已过期，请重新登录！");
+				window.location.href = "login.html";
+			}
+			else{
+				$("#nickName_h2").append(final_nickName);
+				$("#mail_p").append(final_mail);
+			}
+        </script> 
+        </a> </div>
+    </div>
+    <div class="followers">
+      <div class="f-left f-1"> <a href="#"><span class="f1"></span></a> </div>
+      <div class="f-left f-middle"> <a href="#"><span class="f2"></span></a> </div>
+      <div class="f-left f-right"> <a href="#"><span class="f3"></span></a> </div>
+      <div class="clear"></div>
+    </div>
+    <ul class="content">
+       <li class="menu">
+        <ul>
+          <li class="button"><a href="#">基本操作<span class="icon"> </span></a></li>
+          <li class="dropdown">
+            <ul class="icon-navigation">
+              <li><a href="match.html">比赛报名</a></li>
+              <li><a href="match_message.html">查看报名信息</a></li>
+              <li><a href="show_match_person.html">查看报名用户</a></li>
+              <li><a href="download.html">查看作品</a></li>
+              <li><a href="upload.html">上传文件</a></li>
+              <li><a href="index.html">返回主页</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <!--
+      <li class="menu">
+        <ul>
+          <li class="button"><a href="#">信息查看<span class="icon stat"> </span><i>0</i></a></li>
+          <li class="dropdown">
+            <ul class="icon-navigation">
+              <li><a href="#">通知<span>[00]</span></a></li>
+              <li><a href="#">私信<span>[00]</span></a></li>
+              <li><a href="#">个人动态<span>[00]</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      -->
+      <li class="menu">
+        <ul>
+          <li class="button"><a href="#">个人设置<span class="icon setup"> </span></a></li>
+          <li class="dropdown">
+            <ul class="icon-navigation">
+              <!--
+              <li><a href="#" id="changeIcon">更换头像</a></li>
+              <script>
+			      $("#changeIcon").click(function(){
+					  swal({ 
+						  title: "选择图片", 
+						  text: "请在计算机选择图片",
+						  type: "input", 
+						  inputType: "file",
+						  showCancelButton: true,
+						  confirmButtonText: "确定",
+						  cancelButtonText: "取消", 
+						  closeOnConfirm: false, 
+						  animation: "slide-from-top", 
+						  },
+						  function(file){ 
+							  if (file === false){
+								  return false;
+							  }  
+							  if (file === null) { 
+								swal.showInputError("请选择图片！");
+								return false; 
+							  } 
+							  var data ={
+								  file:file
+							  };
+							  $.ajax({
+								  type:"post",
+								  data:data,
+								  dataType:"json",
+								  url:"./user/upload_icon",
+								  success: function(msg){
+									  if(msg.success == false){
+										  swal("错误信息！","上传头像失败！","error");
+										  return false;
+									  }
+									  if(msg.success == true){
+										  swal({
+											title: "成功信息！",
+											text: "已成功上传头像！",
+											type: "success",
+											closeOnConfirm: true,
+											},
+											function(){
+												setTimeout(function(){
+													history.go(0);
+												},0);
+									      });
+									  }
+								  },
+								  error: function(){
+									  swal("错误信息！","请求失败！","error");
+								  }
+							  })
+						});
+				  });
+			  </script>
+              -->
+              <li><a href="#" id="changeNickName">修改昵称</a></li>
+              <script>
+			      $("#changeNickName").click(function(){
+					  swal({ 
+						  title: "输入昵称", 
+						  text: "请输入您想要更换的昵称",
+						  type: "input", 
+						  inputType: "text",
+						  confirmButtonText: "确定",
+						  cancelButtonText: "取消",
+						  showCancelButton: true, 
+						  closeOnConfirm: false, 
+						  animation: "slide-from-top", 
+						  inputPlaceholder: "昵称" 
+						  },
+						  function(inputValue){ 
+							  if (inputValue === false){
+								  return false;
+							  }  
+							  if (inputValue === "") { 
+								swal.showInputError("请输入昵称！");
+								return false; 
+							  } 
+							  inputValue = encodeURI(inputValue);
+							  inputValue = encodeURI(inputValue);
+							  var data ={
+								  nickName:inputValue
+							  };
+							  $.ajax({
+								  type:"get",
+								  data:data,
+								  dataType:"json",
+								  url:"./user/change_nickName",
+								  success: function(msg){
+									  if(msg.success == false){
+										  swal("错误信息！","修改失败","error");
+										  return false;
+									  }
+									  if(msg.success == true){
+										  swal({
+											title: "成功信息！",
+											text: "已成功修改昵称！",
+											type: "success",
+											closeOnConfirm: true,
+											},
+											function(){
+												setTimeout(function(){
+													history.go(0);
+												},0);
+									      });
+									  }
+								  },
+								  error: function(){
+									  swal("错误信息！","请求失败！","error");
+								  }
+							  })
+						});
+				  });
+			  </script>
+              <li><a href="forgot.html">修改密码</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

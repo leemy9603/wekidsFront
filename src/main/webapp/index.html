@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>慧诺教育科技-主页</title>
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="3D打印,3D打印培训,科技教育,现代化教育,慧诺,慧诺教育,慧诺科技" />
+<meta name="description" content="3D打印,3D打印培训,科技教育,现代化教育,慧诺,慧诺教育,慧诺科技"/>
+<meta name="author" content="慧诺教育科技部"/>
+<script src="js/sweetalert.min.js"></script>
+<script type="application/x-javascript"> 
+	addEventListener("load", function(){ setTimeout(hideURLbar, 0); }, false); 
+	function hideURLbar(){ 
+		window.scrollTo(0,1); 
+	} 
+</script>
+<!-- //Custom Theme files -->
+<!-- js -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<link href="css/gallery.css" rel='stylesheet' type='text/css' />
+<!-- //js -->
+<!-- start-smoth-scrolling-->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(".scroll").click(function(event){		
+				event.preventDefault();
+				$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+			});
+		});
+</script>
+<!--//end-smoth-scrolling-->
+</head>
+<body>
+<!--banner-->
+<div class="banner"> 
+  <!--header-->
+  <div class="headder">
+    <nav class="navbar navbar-default"> 
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> <span class="icon-bar"> </span> </button>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#home" class="scroll">主页</a></li>
+          <li><a href="#about" class="scroll">关于</a></li>
+          <li><a href="personnal.html">个人中心</a></li>
+          <li><a href="#services" class="scroll">服务</a></li>
+          <li><a href="#gallery" class="scroll">作品</a></li>
+          <li><a href="#contact" class="scroll">联系</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="logo"><a class="navbar-brand" href="index.html"><img src="images/logo.png" /></a> </div>
+    <div id="personal-center" class="header-right-text"> </div>
+    <script>
+		var final_username = "";
+		var final_mail = "";
+		var final_nickName = "";
+		var totalcookie = document.cookie.split("; ");
+		for(i=0 ; i<totalcookie.length ; i++){
+			var findcookie = totalcookie[i].split("=");
+			if(findcookie[0] === "nickName"){
+				final_nickName = findcookie[1];
+				final_nickName = decodeURI(final_nickName);
+				final_nickName = decodeURI(final_nickName);
+			}
+			if(findcookie[0] === "username"){
+				final_username = findcookie[1];
+			}
+			if(findcookie[0] === "mail"){
+				final_mail = findcookie[1];
+			}
+		}
+		if(final_username.length==0 && final_mail.length==0 && final_nickName.length==0){
+			document.getElementById("personal-center").innerHTML = '<h3>您好！请<span><a href="login.html">登录</a> / <a href="register.html">注册</a></span></h3>';
+		}
+		else{
+			document.getElementById("personal-center").innerHTML = '<h3>欢迎您！<span><a href="personnal.html">' + final_nickName + '</a>&nbsp&nbsp<a id="logout" href="#">注销</a> / <a href="register.html">注册</a></span></h3>';
+		}
+	</script> 
+    <script>
+		$(document).ready(function(){
+			$("#logout").click(function(){
+				swal({
+  					title: "您确定要退出吗？",
+  					text: "系统将清空您的登录信息！",
+  					type: "warning",
+  					showCancelButton: true,
+  					confirmButtonColor: "#DD6B55",
+  					confirmButtonText: "确认退出",
+  					cancelButtonText: "取消",
+  					closeOnConfirm: false,
+  					closeOnCancel: false
+					},
+					function(isConfirm){
+  						if (isConfirm) {
+    						$.ajax({
+								type: "post",
+								data: "",
+								dataType: "json",
+								url: "./user/logout",
+								success: function(msg){
+									if(msg.success == true){
+										swal({
+											title: "已退出",
+											text: "已成功退出登录！",
+											type: "success",
+											closeOnConfirm: true,
+											},
+											function(){
+												setTimeout(function(){
+													history.go(0);
+												},0);
+										});
+									}
+									else{
+										swal("错误信息！","退出登录失败！","error");
+									}
+								},
+								error: function(msg){
+									swal("错误信息！","退出登录失败！","error");
+								}
+							});
+  						}else{
+    						swal("已取消", "您已取消退出", "success");
+  						}
+				});
+			})
+		})	
+	</script>
+    <div class="search-bar">
+      <input type="text" value="在本站内搜索..." onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '在本站内搜索...';}">
+      <input type="button" value="">
+    </div>
+    <div class="clearfix"> </div>
+  </div>
+  <!--//header-->
+  <h1>慧诺教育科技</h1>
+</div>
+<!--//banner--> 
+<!--about-->
+<div class="about" id="about">
+  <div class="container">
+    <h6>关于我们</h6>
+    <div class="about-grids">
+      <div class="col-md-6 about-info"> <img src="images/bgimg.jpg" alt=""/> </div>
+      <div class="col-md-6 about-info">
+        <p>其实孩子的创新思维和个性发展不应该被忽视，甚至唾弃。因为"大众创新“是新时代的最强音，创新驱动更是中国发展之路，而孩子恰恰是祖国的未来。知识经济时代初见端倪，也对人才培养提出了新的价值要求并赋予新的内涵，其核心是对人创新思维的培植与潜能的挖掘。可长期以来，广东省中小学教育存在着诸多弊端，其中压抑学生的个性发展，以及在整个教育过程中缺乏有利于促进学生创新意识培养和创新能力发展的实践课程和目标维度。基于这样的思考,湛江市慧诺教育科技有限公司决定跳出传统教育的圈子，在中小学生的课堂教育之余设立科技教育课程，以发展少年的创新能力为主要目标，致力于对中小学生创新思维和创新能力的培养。与其他科技课程不同，慧诺科技教育课程结合美国的STEAM教育理念和设计思维，老师引导学生进行3D设计，跨学科授课，并且不断鼓励学生创新，强调团队合作与交流，创造属于自己的实体作品。</p>
+      </div>
+      <div class="clearfix"> </div>
+    </div>
+  </div>
+</div>
+<!--/about--> 
+<!--services-->
+<div class="services" id="services"> 
+  <!-- container -->
+  <div class="container">
+    <h6>提供的服务</h6>
+    <div class="serve-grids">
+      <div class="serve-grids-top">
+        <div class="col-md-3 service-box">
+          <figure class="icon"> <i class="glyphicon glyphicon-modal-window"> </i> </figure>
+          <h5>提供现代化科技课堂的教学服务</h5>
+          <p>服务介绍</p>
+        </div>
+        <div class="col-md-3 service-box">
+          <figure class="icon"> <i class="glyphicon glyphicon-tent"> </i> </figure>
+          <h5>提供校园科技教育实验室的解决方案</h5>
+          <p>服务介绍</p>
+        </div>
+        <div class="col-md-3 service-box">
+          <figure class="icon"> <i class="glyphicon glyphicon-asterisk"> </i> </figure>
+          <h5>提供3D个性定制礼物和作品的服务</h5>
+          <p>服务介绍</p>
+        </div>
+        <div class="col-md-3 service-box">
+          <figure class="icon"> <i class="glyphicon glyphicon-map-marker"> </i> </figure>
+          <h5>提供科技教育产品研发、销售、维护的服务</h5>
+          <p>服务介绍</p>
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+    </div>
+    <!-- //container --> 
+  </div>
+</div>
+<!--/services--> 
+<!--spl-grid-->
+<div class="container">
+  <div class="banner-bottom2">
+    <div class="banner-bottom-right1">
+      <div class="banner-bottom-right-info">
+        <h2 class="voluptatum">一次关于教育和科技的伟大革新</h2>
+        <p class="quis">教育要面向现代化，面向世界，面向未来！<span>我们提供许多全面详细的科技教育，让孩子们能够找到乐趣的同时又不忘学到东西，做到身心娱乐的同时又充实自己的经验</span></p>
+        <a href="#" class="hvr-rectangle-in"><i class="glyphicon glyphicon-chevron-right"> </i></a> </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <div class="cate Nam">
+        <h2>为什么选择我们？</h2>
+        <ul>
+          <li><a href="#">粤西首家致力于推广科技教育的公司</a></li>
+          <li><a href="#">广东工业大学筑梦计划重点扶持对象</a></li>
+          <li><a href="#">广东工业大学孵化的明星公司</a></li>
+          <div class="no-text">
+            <li><a href="#">广东理工学院教授带领的3D打印技术团队核心骨干</a></li>
+            <li><a href="#">湛江市科技企业孵化器大力支持</a></li>
+            <li><a href="#">2016年湛江市“全国科普日”活动3D打印讲师团</a></li>
+            <li><a href="#">2016年香港霍英东研究院3D打印夏令营讲师助理团</a></li>
+            <li><a href="#">2016年湛江市25小，12小的科技节积极推动者</a></li>
+            <li><a href="#">2016年合作开课机构6个，合作学校4个</a></li>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <div class="banner-bottom-left1">
+      <div class="banner-bottom-left-grids">
+        <div class="banner-bottom-left-grid iusto"> <img src="images/car1.png" alt=" " class="mnb img-responsive">
+          <div class="cap1 cum"> <span> </span> </div>
+        </div>
+        <div class="banner-bottom-left-grid txt1">
+          <h3>提供校园科技教育实验室的解决方案</h3>
+          <p class="asd"><span></span></p>
+        </div>
+        <div class="banner-bottom-left-grid iusto"> <img src="images/car2.png" alt=" " class="mnb img-responsive">
+          <div class="cap"> <span> </span> </div>
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+      <div class="banner-bottom-left-grids">
+        <div class="banner-bottom-left-grid txt1">
+          <h3>提供现代化科技课堂的教学服务</h3>
+          <p class="asd"><span></span></p>
+        </div>
+        <div class="banner-bottom-left-grid iusto"> <img src="images/car3.png" alt=" " class="mnb img-responsive">
+          <div class="cap3"> <span> </span> </div>
+        </div>
+        <div class="banner-bottom-left-grid txt1">
+          <h3>提供3D个性定制礼物和作品的服务</h3>
+          <p class="asd"><span></span></p>
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+      <div class="banner-bottom-left-grids">
+        <div class="banner-bottom-left-grid iusto"> <img src="images/car4.png" alt=" " class="mnb img-responsive">
+          <div class="cap3"> <span> </span> </div>
+        </div>
+        <div class="banner-bottom-left-grid txt1">
+          <h3>提供科技教育产品研发、销售、维护的服务</h3>
+          <p class="asd"><span></span></p>
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+    </div>
+    <div class="clearfix"> </div>
+  </div>
+</div>
+<!--/spl-grid-->
+<div class="mid-section">
+  <div class="container">
+    <div class="mid-top">
+      <h2>我们的成就一览</h2>
+      <p>2016年，广东工业大学筑梦计划优秀奖</p>
+      <p>2016年，推动2个学校的科技节</p>
+      <p>2016年，合作开课学校机构6个</p>
+      <p>2016年，湛江市“全国科普日”3D打印演示课堂讲师团</p>
+      <p>2016年，香港霍英东研究院“小红鸟”夏令营讲师助理团</p>
+      <p>2017年，肇庆中学创客冬令营导师团</p>
+    </div>
+  </div>
+</div>
+
+<!--start-gallery-->
+<div class="gallery" id="gallery">
+  <div class="container">
+    <h6>作品展示</h6>
+    <div class="gallery-bottom">
+      <div class="view view-ninth"> <a href="images/beizi.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/beizi.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>杯子作品</h2>
+          <p>通过3D打印机打印出来的一个杯子，因为材料问题所以只有一种颜色，材料改良可以打印出更加精美的样式</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/shouren.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/shouren.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>兽人作品</h2>
+          <p>通过3D打印机打印出来的一个魔兽世界中的兽人族，因为材料问题所以只有一种颜色，材料改良可以打印出更加精美的样式</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/senglv.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/senglv.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>僧侣作品</h2>
+          <p>通过3D打印机打印出来的一位苦行僧，因为材料问题所以只有一种颜色，材料改良可以打印出更加精美的样式</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/dabai.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/dabai.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>大白作品</h2>
+          <p>通过3D打印机打印出来的大白，因为材料问题所以只有一种颜色，材料改良可以打印出更加精美的样式</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/shou.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/shou.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>手作品</h2>
+          <p>通过3D打印机打印出来的一双莲花手，因为材料问题所以只有一种颜色，材料改良可以打印出更加精美的样式</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/xiaowuzi.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/xiaowuzi.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>小屋子作品</h2>
+          <p>材料精度和样式用得更加高端，打印出来的小屋子可以拥有各种颜色</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/dengzhao.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/dengzhao.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>灯罩作品</h2>
+          <p>材料精度和样式用得更加高端，打印出来的灯罩可以拥有各种颜色</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/konglong.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/konglong.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>恐龙骨架作品</h2>
+          <p>材料精度和样式用得更加高端，打印出来的恐龙骨架可以拥有各种颜色</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="view view-ninth"> <a href="images/longxia.png" class="b-link-stripe b-animate-go  swipebox"  title="Image Title"><img src="images/longxia.png" alt="" class="img-responsive">
+        <div class="mask mask-1"> </div>
+        <div class="mask mask-2"> </div>
+        <div class="content">
+          <h2>龙虾作品</h2>
+          <p>材料精度和样式用得更加高端，打印出来的龙虾可以拥有各种颜色</p>
+          <a href="#" class="info">Read More</a> </div>
+      </div>
+      <div class="clearfix"> </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="css/swipebox.css">
+<script src="js/jquery.swipebox.min.js"></script> 
+<script type="text/javascript">
+			jQuery(function($) {
+				$(".swipebox").swipebox();
+			});
+</script> 
+<!--//gallery--> 
+<!--contact-->
+<div class="contact" id="contact">
+  <div class="hover">
+    <div class="container">
+      <h6>联系我们</h6>
+      <div class="contact-grids">
+        <div class="col-md-7 contact-left">
+          <form>
+            <input type="text" placeholder="名字"/>
+            <input type="text" placeholder="邮箱"/>
+            <input type="text" placeholder="电话"/>
+            <textarea type="text" placeholder="输入您要说的话..."></textarea>
+            <input type="submit" value="发送"/>
+          </form>
+        </div>
+        <div class="col-md-5 contact-right">
+          <p class="cnt-p">希望您能多多指出我们做得不够的地方，我们将尽我们最大的努力来不断改善！</p>
+          <p>联系方式</p>
+          <p>地址：湛江市赤坎区广田路18号湛江市科技企业孵化器大楼2F-01</p>
+          <p>电话：18813293020</p>
+          <p>微信公众号：慧诺教育科技</p>
+          <p>传真：</p>
+          <p>邮箱：mail@example.com</p>
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--contact--> 
+<!--//contact--> 
+<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				var defaults = {
+					containerID: 'toTop', // fading element id
+					containerHoverID: 'toTopHover', // fading element hover id
+					scrollSpeed: 1200,
+					easingType: 'linear' 
+				};
+				*/
+				
+				$().UItoTop({ easingType: 'easeOutQuart' });
+				
+			});
+</script> 
+<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a> 
+<!--//smooth-scrolling-of-move-up
+	<!-- Bootstrap core JavaScript
+    ================================================== ---> 
+<!-- Placed at the end of the document so the pages load faster--> 
+<script src="js/bootstrap.js"> </script>
+</body>
+<footer>
+  <div class="container">
+    <div class="row clearfix">
+      <div class="col-md-12 column">
+        <div class="row clearfix">
+          <div class="col-md-4 column"></div>
+          <div class="col-md-4 column">
+            <br>
+            <p style="color:#666"><small>©2017 慧诺教育科技 粤ICP备<a href="http://www.miitbeian.gov.cn">17033065</a>号</small></p><br>
+          </div>
+          <div class="col-md-4 column"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</html>

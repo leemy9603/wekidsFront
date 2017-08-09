@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>下载文件-慧诺教育科技</title>
+<link href="css/download.css" rel="stylesheet" type="text/css"/>
+<link href="css/jPages.css" rel="stylesheet" type="text/css"/>
+<link href="css/animate.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<script src="js/sweetalert.min.js"></script>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/jPages.js"></script>
+<script>
+  $(document).ready(function(){
+  	$("#look").click(function(){
+  		$.ajax({
+  			type: "post",
+			data: "",
+   			dataType: "json",
+   			url: "./file/show_file",
+   			success: function(msg){
+				if(msg.message == '请先登录'){
+					swal("错误信息！","请先登录！","error");
+				}
+				else if(msg.length == 0){
+					swal("警告信息！","未找到任何文件，可能已被删除或还未上传！","info");
+				}
+				else{
+					var data = msg;
+					function down(x, y) {
+            			return (x.username < y.username) ? 1 : -1
+        			}
+					data = data.sort(down);
+    				var str='<ul id="itemContainer">';
+   					$.each(data,function(index, file){ //file = data[index]
+     					str += '<li><input type="checkbox" value="' + data[index].name + '"/>' + '上传用户：' + data[index].username + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文件名：' + data[index].name + '</li>';
+    				});
+					str += '</ul>';
+    				$("#checkboxs").html(str);
+					$(function(){
+  						$("div.holder").jPages({
+   					 	containerID : "itemContainer"
+  						});
+					});
+				}
+   			},
+			error: function(mssg){
+				swal("错误信息！","查看文件时遇到错误！","error");
+			}
+  		});
+ 	})
+  })		   
+</script>
+</head>
+
+<body>
+<div class="download">
+  <div id="nick"> 
+    <script>
+		var final_username = "";
+		var final_mail = "";
+		var final_nickName = "";
+		var totalcookie = document.cookie.split("; ");
+		for(i=0 ; i<totalcookie.length ; i++){
+			var findcookie = totalcookie[i].split("=");
+			if(findcookie[0] === "nickName"){
+				final_nickName = findcookie[1];
+				final_nickName = decodeURI(final_nickName);
+				final_nickName = decodeURI(final_nickName);
+			}
+			if(findcookie[0] === "username"){
+				final_username = findcookie[1];
+			}
+			if(findcookie[0] === "mail"){
+				final_mail = findcookie[1];
+			}
+		}
+		if(final_username.length==0 && final_mail.length==0 && final_nickName.length==0){
+			document.getElementById("nick").innerHTML = '<h3>您好！请<span><a href="login.html">登录</a> / <a href="register.html">注册</a></span></h3>';
+		}
+		else{
+			document.getElementById("nick").innerHTML = '<h3>欢迎您！<span><a href="personnal.html">' + final_nickName + '</a>&nbsp&nbsp<a id="logout" href="#">注销</a> / <a href="register.html">注册</a></span></h3>';
+		}
+	</script> 
+    <script>
+		$(document).ready(function(){
+			$("#logout").click(function(){
+				swal({
+  					title: "您确定要退出吗？",
+  					text: "系统将清空您的登录信息！",
+  					type: "warning",
+  					showCancelButton: true,
+  					confirmButtonColor: "#DD6B55",
+  					confirmButtonText: "确认退出",
+  					cancelButtonText: "取消",
+  					closeOnConfirm: false,
+  					closeOnCancel: false
+					},
+					function(isConfirm){
+  						if (isConfirm) {
+    						$.ajax({
+								type: "post",
+								data: "",
+								dataType: "json",
+								url: "./user/logout",
+								success: function(msg){
+									if(msg.success == true){
+										swal({
+											title: "已退出",
+											text: "已成功退出登录！",
+											type: "success",
+											closeOnConfirm: true,
+											},
+											function(){
+												setTimeout(function(){
+													history.go(0);
+												},0);
+										});
+									}
+									else{
+										swal("错误信息！","退出失败！","error");
+									}
+								},
+								error: function(msg){
+									swal("错误信息！","退出失败！","error");
+								}
+							});
+  						}else{
+    						swal("已取消", "您已取消退出", "success");
+  						}
+				});
+			})
+		})	
+	</script> 
+  </div>
+  <h1>只有网站管理员才有权限下载所有已上传的文件！</h1>
+  <input type="button" class="checkfile" id="look" name="look" value="查看文件"/>
+  <div style="clear:both">
+    <h3>以下是所有文件：</h3>
+  </div>
+  <input type="button" class="select" value="全选" id="sele"/>
+  <input type="button" class="select" value="全不选" id="setinterval"/>
+  <input type="button" class="select" value="反选" id="clear"/>
+  <br/>
+  <br/>
+  <div id="checkboxs"> </div>
+  <div class="holder">
+  </div>
+  <script>
+	  var sele=document.getElementById("sele");//获取全选
+	  var unsele=document.getElementById('setinterval');//获取不选
+	  var clear=document.getElementById('clear');//获取反选
+	  var checkbox=document.getElementById('checkboxs');//获取div
+	  var checked=checkbox.getElementsByTagName('input');//获取div下的input
+		  
+	  //全选
+	  sele.onclick=function(){
+		  for(i=0;i<checked.length;i++){
+		      checked[i].checked=true;
+		  }
+	  }
+		 
+	  //不选
+	  unsele.onclick=function(){
+		  for(i=0;i<checked.length;i++){
+			  checked[i].checked=false;
+		  }
+	  }
+			
+	  //反选
+	  clear.onclick=function(){
+	      for(i=0;i<checked.length;i++){
+			  if(checked[i].checked==true){
+				  checked[i].checked=false;
+			  } 
+			  else{
+				  checked[i].checked=true;
+			  }
+		  }
+      }
+  </script>
+  <input type="text" class="text" id="input" placeholder="验证码:（不区分大小写）"/>
+  <input type="button" id="checkCode" class="code" onclick="createCode()"/>
+  <a href="#" onclick="createCode()">看不清楚,换一张</a><br>
+  <input type="button" class="button" id="download" name="download" value="下载"/>
+  <input type="button" class="button" id="delete" name="delete" value="删除"/>
+  <a class="return" href="index.html">返回主页</a> 
+  <script>
+		  $(document).ready(function(){
+			$("#delete").click(function(){
+				var checkcode = document.getElementById("input").value;
+					if (checkcode.length == 0) {
+						swal("错误信息！","请输入验证码！","error");
+						createCode();
+						return false;
+					}else if(checkcode.toUpperCase() != code.toUpperCase()) {    
+						swal("错误信息！","验证码输入错误！","error");    
+						createCode(); 
+						return false;
+					}
+				createCode();
+				var checkbox=document.getElementById('checkboxs');
+				var checked=checkbox.getElementsByTagName('input');
+				var length=checked.length;
+				var filestring=new Array();
+				for(i = 0; i < length; i++){
+					if(checked[i].checked==true){
+						filestring.push($(checked[i]).val());
+					} 
+				}
+				if(filestring.length == 0){
+					swal("错误信息！","未选中任何文件！","error");
+					return false;
+				}
+				swal({
+  					title: "您确定要删除这些文件吗？",
+  					text: "删除之后将无法恢复！",
+  					type: "warning",
+  					showCancelButton: true,
+  					confirmButtonColor: "#DD6B55",
+  					confirmButtonText: "确认删除",
+  					cancelButtonText: "取消",
+  					closeOnConfirm: false,
+  					closeOnCancel: false
+					},
+					function(isConfirm){
+  						if (isConfirm) {
+							var file = filestring;
+							file = encodeURI(file);
+							file = encodeURI(file);
+							var xhr = new XMLHttpRequest;
+							xhr.addEventListener("progress", deleteProgress, false);
+							function deleteProgress(evt){
+								
+							}
+							xhr.addEventListener("load", deleteComplete, false);
+							function deleteComplete(evt){
+								if(xhr.readyState == 4){
+									if(xhr.status == 200){
+										var get_response = JSON.parse(xhr.responseText);
+										if(get_response.message == "请先以超级管理员身份登录"){
+											swal("错误信息！","请先以管理员身份登录！","error");
+											return false;
+										}
+										if(get_response.message == "您没有删除权限"){
+											swal("错误信息！","您没有删除权限！","error");
+											return false;
+										}
+										if(get_response.success == true){
+											swal("已删除！","您已成功删除这些文件！","success");
+											document.getElementById("look").click();
+										}
+									}
+									else{
+										swal("错误信息！","请求失败！","error");
+										return false;
+									}
+								}
+							}
+							xhr.open("POST", "./file/delete_file");
+							var data = 'file_to_delete=' + file;
+							xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");  
+							xhr.send(data);
+  						}else{
+    						swal("已取消", "您已取消退出", "success");
+  						}
+				});
+			})
+			
+			$("#download").click(function(){
+				var checkcode = document.getElementById("input").value;
+				if (checkcode.length == 0) {
+					swal("错误信息！","请输入验证码！","error");
+					createCode();
+					return false;
+				}else if(checkcode.toUpperCase() != code.toUpperCase()) {    
+        			swal("错误信息！","验证码输入错误！","error");    
+        			createCode(); 
+					return false;
+				}
+				createCode();
+				var checkbox=document.getElementById('checkboxs');
+				var checked=checkbox.getElementsByTagName('input');
+				var length=checked.length;
+				var filestring=new Array();
+				for(i = 0; i < length; i++){
+					if(checked[i].checked==true){
+			  			filestring.push($(checked[i]).val());
+					} 
+				}
+				if(filestring.length == 0){
+					swal("错误信息！","未选中任何文件！","error");
+					return false;
+				}
+				var file = filestring;
+				file = encodeURI(file);
+				file = encodeURI(file);
+				
+				
+				var xhr = new XMLHttpRequest;
+				xhr.addEventListener("progress", uploadProgress, false);
+				function uploadProgress(evt){
+					
+				}
+				xhr.addEventListener("load", uploadComplete, false);
+				function uploadComplete(evt) {
+					if(xhr.readyState == 4){
+				 		if(xhr.status == 200){
+							try {
+								if(JSON.parse(xhr.responseText).message == '请先以管理员身份登录'){
+									swal("错误信息！","请先以管理员的身份登录！","error");
+									return;
+								}
+								if(JSON.parse(xhr.responseText).message == '您没有下载权限'){
+									swal("错误信息！","您没有权限下载！","error");
+									return;
+								}
+								if(JSON.parse(xhr.responseText).message == '下载失败'){
+									swal("错误信息！","下载失败！","error");
+									return;
+								}
+							}
+							catch (e) {
+								console.log(e);
+								var form=$("<form>");//定义一个form表单
+								form.attr("style","display:none");
+								form.attr("target","");
+								form.attr("method","post");
+								form.attr("action","./file/download");
+								var input1=$("<input>");
+								input1.attr("type","hidden");
+								input1.attr("name","file");
+								input1.attr("value",file);
+								$("body").append(form);//将表单放置在web中
+								form.append(input1);
+								form.submit();//表单提交
+							}
+				 		}
+						else{
+							swal("错误信息！","请求失败！","error");
+						}
+			 		}
+				}
+				xhr.open("POST", "./file/download");
+				var data = 'file=' + file;
+				xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");  
+		 		xhr.send(data);
+			})
+		  })		   
+		</script> 
+</div>
+<script src="js/checkCode.js"></script>
+</body>
+</html>

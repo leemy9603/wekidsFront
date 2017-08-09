@@ -1,0 +1,70 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+   background: url(../images/banner.jpg) no-repeat;
+   background-size:cover;
+}
+.main{
+	padding-left:100px;
+	background:rgba(132,186,219,0.5);
+	border:none;
+	width:33%;
+	margin:0 auto;
+}
+h1{
+	color:#369;
+	font-family:"Lucida Console", Monaco, monospace;
+}
+.second{
+	width:33%;
+	overflow:auto;
+	margin:0 auto;
+}
+.normal{
+	display: block;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555555;
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	margin-top: 0.8em;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	
+}
+.normal:hover{
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+.button{
+	background: rgba(78, 197, 241, 0.81);
+  	color: #FFF;
+  	font-size: 17px;
+  	font-weight: 400;
+ 	padding: 8px 7px;
+	width:110px;
+  	display: inline-block;
+  	cursor: pointer;
+  	border-radius: 6px;
+  	-webkit-border-radius: 6px;
+  	-moz-border-radius: 6px;
+  	-o-border-radius: 6px;
+ 	-ms-border-radius: 6px;
+  	outline: none;
+  	border: none;
+}
+.button:hover {
+	background:#F45B4B;
+	transition: 0.5s all;
+  	-webkit-transition: 0.5s all;
+ 	-moz-transition: 0.5s all;
+ 	-o-transition: 0.5s all;
+}

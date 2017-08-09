@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>用户注册-慧诺教育科技</title>
+<link href="css/register.css" rel='stylesheet' type='text/css' />
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/event.js"></script>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/sweetalert.min.js"></script>
+<script type="application/x-javascript"> 
+	addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+	function hideURLbar(){ 
+		window.scrollTo(0,1);
+	} 
+</script>
+</head>
+<body>
+<h1>用户注册</h1>
+<div class="login-01">
+  <form>
+    <ul>
+      <li class="first"> <p class=" icon1 phone"></p>
+        <input type="tel" id="phone" maxlength="11" placeholder="手机">
+        <p class="pstyle" id="phone_p">*11位手机号码</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 user"></p>
+        <input type="text" id="username" maxlength="16" placeholder="用户名">
+        <p class="pstyle" id="username_p">*8至16位字母开头的数字字母组合</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 nickName"></p>
+        <input type="text" id="nickName" placeholder="昵称">
+        <p class="pstyle" id="nickName_p">*起一个您喜欢的昵称</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 email"></p>
+        <input type="text" id="mail" placeholder="邮箱">
+        <p class="pstyle" id="mail_p">*请输入正确的个人邮箱格式</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 password"></p>
+        <input type="password" id="p1" maxlength="16" placeholder="密码">
+        <p class="pstyle" id="password_p">*8至16位</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 password"></p>
+        <input type="password" id="p2" maxlength="16" placeholder="确认密码">
+        <p class="pstyle" id="confirm_password_p">*8至16位</p>
+        <div class="clear"></div>
+      </li>
+      <li class="first"> <p class=" icon1 coder"></p> <span>
+        <input type="text" id="input" placeholder="短信验证码">
+        <input type="button" class="create" id="getcode" value="免费获取短信验证码"/>
+        </span>
+        <div class="clear"></div>
+      </li>
+    </ul>
+    <input type="button" class="button" id="register" value="注册" >
+    <script>
+	  	$(document).ready(function(){	
+			$("#phone").blur(function(){
+				var phone = document.getElementById("phone").value;
+				var phonecheck1=new RegExp(/^1[0-9]{10}$/);
+				var phonecheck2=phone.match(phonecheck1);
+				if(phonecheck2){
+					$("#phone_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#phone_p").html('<img src="images/error_icon.png" >请输入正确的手机号码');
+				}
+			})
+			
+			$("#username").blur(function(){
+				var username = document.getElementById("username").value;
+				var usernamecheck1=new RegExp(/^[a-zA-Z][a-zA-Z0-9]*$/);
+				var usernamecheck2=username.match(usernamecheck1);
+				if(usernamecheck2 && username.length >= 8 && username.length <= 16){
+					$("#username_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#username_p").html('<img src="images/error_icon.png" >必须是8至16位字母开头的数字字母组合');
+				}
+			})
+			
+			$("#nickName").blur(function(){
+				var nickName = document.getElementById("nickName").value;
+				if(nickName.length != 0){
+					$("#nickName_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#nickName_p").html('<img src="images/error_icon.png" >昵称不能为空');
+				}
+			})
+			
+			$("#mail").blur(function(){
+				var mail = document.getElementById("mail").value;
+				var mailcheck1=new RegExp(/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/);
+			    var mailcheck2=mail.match(mailcheck1);
+				if(mailcheck2){
+					$("#mail_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#mail_p").html('<img src="images/error_icon.png" >请输入正确的邮箱格式');
+				}
+			})
+			
+			$("#p1").blur(function(){
+				var password = document.getElementById("p1").value;
+				if(password.length >= 8 && password.length <= 16){
+					$("#password_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#password_p").html('<img src="images/error_icon.png" >必须是8至16位');
+				}
+			})
+			
+			$("#p2").blur(function(){
+				var confirm_password = document.getElementById("p2").value;
+				if(confirm_password.length >= 8 && confirm_password.length <= 16 && confirm_password == document.getElementById("p1").value){
+					$("#confirm_password_p").html('<img src="images/success_icon.png" >');
+				}
+				else{
+					$("#confirm_password_p").html('<img src="images/error_icon.png" >前后密码不一致');
+				}
+			})
+			
+			$("#getcode").click(function(){
+				var phone_number = document.getElementById("phone").value;
+				if (phone_number.length == 0){
+					swal("错误信息！","请输入手机号！","error");
+					return false;
+				}
+				var phonecheck1=new RegExp(/^1[0-9]{10}$/);
+				var phonecheck2=phone_number.match(phonecheck1);
+				if(!phonecheck2){
+					swal("错误信息！","请输入正确的手机号格式！","error");
+					return false;
+				}
+				else{
+					var data = {
+						"to": phone_number
+					};
+					$.ajax({
+						type: "POST",
+						data: data,
+						dataType: "json",
+						url: "./user/get_code",
+						beforeSend: function(request){
+							request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+						},
+						success: function(msg){
+							var clock;
+							var timedown = 60;
+							if(msg.message === '该手机已经被注册'){
+								swal("错误信息！","该手机已被注册！","error");
+								$("#phone_p").html('<img src="images/error_icon.png" >该手机号已被注册！');
+							}
+							if(msg.respCode == '00104'){
+						   		swal("错误信息！","该手机今日接收短信条数已达上限！","error");
+						   		return false;
+					   		}
+							if(msg.respCode === "00000"){
+								document.getElementById("getcode").style.backgroundColor = "gray";
+								document.getElementById("getcode").disabled = true;
+								document.getElementById("getcode").value = "重新发送(" + timedown + "s)";
+								swal("成功信息！","短信已成功发送！","success");
+								clock = setInterval(doloop, 1000);
+								function doloop(){
+									timedown--;
+									if(timedown == 0){
+										clearInterval(clock);
+										document.getElementById("getcode").style.background = "rgba(78,197,241,0.81)";
+										document.getElementById("getcode").disabled = false;
+										document.getElementById("getcode").value = "免费获取短信验证码";
+										timedown = 60;
+										return;
+									}
+									else{
+										document.getElementById("getcode").style.backgroundColor = "gray";
+										document.getElementById("getcode").disabled = true;
+										document.getElementById("getcode").value = "重新发送(" + timedown + "s)";
+									}
+								}
+							}
+							else{
+							    swal("错误信息！","未知的错误发生了！","error");
+							    return false;
+						    }
+						},
+						error: function(e){
+							swal("错误信息！","请求失败","error");
+						}
+					});
+				}
+				
+			})
+		})
+		
+		var register = document.getElementById('register');
+        EventUtil.addHandler(register, 'click', function () {
+				 
+			//手机号码的填写认证
+			var phone = document.getElementById('phone').value;
+			if (phone.length == 0){
+				swal("错误信息！","请输入手机号！","error");
+				return false;
+			}
+			var phonecheck1=new RegExp(/^1[0-9]{10}$/);
+			var phonecheck2=phone.match(phonecheck1);
+			if(!phonecheck2){
+				swal("错误信息！","请输入正确的手机号格式！","error");
+				return false;
+			}
+				  
+			//用户名的填写认证
+            var username = document.getElementById('username').value;
+			if (username.length == 0){
+				swal("错误信息！","请输入用户名！","error");
+				return false;
+			}
+			if (username.length < 8 || username.length > 16){
+				swal("错误信息！","用户名至少8位至多16位！","error");
+				return false;
+			}
+			var usernamecheck1=new RegExp(/^[a-zA-Z][a-zA-Z0-9]*$/);
+			var usernamecheck2=username.match(usernamecheck1);
+			if(!usernamecheck2){
+				swal("错误信息！","用户名必须是以字母开头的字母数字组合","error");
+				return false;
+			}
+				  
+			//昵称的填写认证
+			var nickName = document.getElementById('nickName').value;
+			if (nickName.length == 0){
+				swal("错误信息！","请输入昵称！","error");
+				return false;
+			}
+				  
+			//邮箱的填写认证
+			var mail = document.getElementById('mail').value;
+			if (mail.length == 0){
+				swal("错误信息！","请输入邮箱！","error");
+				return false;
+			}
+			var mailcheck1=new RegExp(/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,5}$/);
+			var mailcheck2=mail.match(mailcheck1);
+			if(!mailcheck2){
+				swal("错误信息！","请输入正确的邮箱格式！","error");
+				return false;
+			}
+				  
+			//密码的填写认证
+			var password = document.getElementById('p1').value;
+			if(password.length == 0){
+				swal("错误信息！","请输入密码！","error");
+				return false;
+			} 
+			if(password.length < 8){
+				swal("错误信息！","密码长度请至少输入8位","error");
+				return false;
+			}
+			var password2 = document.getElementById("p2").value;
+			if (password != password2){
+				swal("错误信息！","两次密码不一致，请重新输入！","error");
+				return false;
+			}
+				  
+			//验证码的填写认证
+			var checkcode = document.getElementById("input").value;
+			if (checkcode.length == 0) {
+				swal("错误信息！","请输入短信验证码！","error");
+				return false;
+			}
+				  
+			nickName = encodeURI(nickName);
+       		nickName = encodeURI(nickName);
+			var hash = hex_md5(password);
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (request.readyState === 4){
+                    if (request.status === 200){
+						var get_response = JSON.parse(request.responseText);
+                        if (get_response.message === '用户名已存在，请尝试其他用户名') {
+                        	swal("错误信息！","该用户名已被注册！请尝试其他用户名！","error");
+							$("#username_p").html('<img src="images/error_icon.png" >该用户名已被注册！');
+							return false;
+                        }
+						if(get_response.message === '验证码输入错误'){
+							swal("错误信息！","验证码输入错误！","error");
+							return false;
+						}
+						if(get_response.message === '验证码已过期'){
+							swal("错误信息！","验证码已经过期！","error");
+							return false;
+						}
+						if(get_response.message === '该邮箱已被注册'){
+							swal("错误信息！","该邮箱已被注册！","error");
+							return false;
+						}
+						if(get_response.success === false){
+							swal("错误信息！","注册失败！！失败原因：未知的错误发生了！","error");
+							return false;
+						}
+                        if(get_response.success === true){
+							swal({
+								title: "注册成功！",
+								text: "点击确定进入登录界面",
+								type: "success",
+								closeOnConfirm: true,
+								},
+								function(){
+									setTimeout(function(){
+								      	window.location.href="login.html";
+								  	},0);
+							});
+                       	}
+                    }
+					else{
+						swal("错误信息！","注册请求失败！","error");
+			    	}
+                }
+            }
+			request.open('POST','./user/add_user');
+			var data = 'password=' + hash + '&username=' + username + '&phone=' + phone + '&mail=' + mail + '&nickName=' + nickName + '&checkcode=' + checkcode;
+			request.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+            request.send(data);
+        })
+	  </script>
+    <div class="clear"></div>
+  </form>
+  <br/>
+  <br/>
+  <br/>
+  <div class="footer">
+    <p align="center" class="agreement">注册默认您已阅读并同意<a href="#">《服务协议》</a></p>
+    <hr>
+    <p align="center" class="agreement">已经拥有账号？<a href="login.html">点击登录</a></p>
+  </div>
+</div>
+<script src="js/md5.js"></script>
+</body>
+</html>

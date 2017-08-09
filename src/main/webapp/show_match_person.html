@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>参加比赛用户-慧诺教育科技</title>
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link href="css/jPages.css" rel="stylesheet" type="text/css"/>
+<link href="css/animate.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="images/index.ico"/>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"> </script>
+<script src="js/sweetalert.min.js"></script>
+<script src="js/jPages.js"></script>
+</head>
+
+<body style="background:url(images/banner.jpg) no-repeat; background-size:cover">
+<script>
+	$(window).load(function(){
+		$.ajax({
+			type:"get",
+			data:"",
+			dataType:"json",
+			url:"./match/show_match_user",
+			success: function(msg){
+				if(msg.message == '请先以管理员身份登录'){
+					swal("错误信息！","请先以管理员身份登录！","error");
+					return false;
+				}
+				if(msg.message == '您没有权限查看其它参赛者信息'){
+					swal({
+						title: "错误信息！",
+						text: "您没有权限查看其它参赛者信息！",
+						type: "error",
+						closeOnConfirm: true,
+						},
+						function(){
+							setTimeout(function(){
+								window.location.href="personnal.html";
+								},0);
+						});
+					return false;
+				}
+				if(msg.success == false){
+					swal("错误信息！","未知的错误发生了！","error");
+					return false;
+				}
+				var data = msg;
+				var str = '<ul id="itemContainer">';
+				$.each(data,function(index,user){
+					str += '<li class="list-unstyled">' +
+						   	 '<div class="panel panel-default">' + 
+							   '<div class="panel-heading"><a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-271564" href="#' + user.id + '">' + '姓名：' + user.realName + '</a> </div>' + 
+							   '<div id="' + user.id + '" class="panel-collapse collapse">' + 
+							     '<div class="panel-body">' + '用户ID：' + user.id + '</div>' +
+								 '<div class="panel-body">' + '手机：' + user.phone + '</div>' +
+								 '<div class="panel-body">' + '邮箱：' + user.email + '</div>' +
+								 '<div class="panel-body">' + '微信：' + user.wechat + '</div>' +
+								 '<div class="panel-body">' + '学校：' + user.school + '</div>' +
+								 '<div class="panel-body">' + '班级：' + user.clazz + '</div>' +
+								 '<div class="panel-body">' + '报名时间：' + user.signupTime + '</div>' + 
+							   '</div>' + 
+							 '</div>' + 
+						   '</li>'	   
+				});
+				str += '</ul>';
+				$("#panel-271564").html(str);
+				$(function(){
+  					$("div.holder").jPages({
+   					containerID : "itemContainer"
+  					});
+				});
+			},
+			error: function(){
+				swal("错误信息！","请求失败！","error");
+			}
+		})
+	});
+</script>
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <h1 class="text-center">查看已报名用户</h1>
+    </div>
+    <div class="col-md-12 column">
+      <div class="row clearfix">
+        <div class="col-md-2 column"> </div>
+        <div class="col-md-8 column">
+          <div class="panel-group" id="panel-271564">
+          </div>
+          <div class="holder"> </div>
+        </div>
+        <div class="col-md-2 column"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

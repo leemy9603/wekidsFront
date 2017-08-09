@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户上传-慧诺教育科技</title>
+<link href="css/upload.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<script src="js/sweetalert.min.js"></script>
+<script src="js/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<div class="upload">
+  <div id="nick"> 
+    <script>
+		var final_username = "";
+		var final_mail = "";
+		var final_nickName = "";
+		var totalcookie = document.cookie.split("; ");
+		for(i=0 ; i<totalcookie.length ; i++){
+			var findcookie = totalcookie[i].split("=");
+			if(findcookie[0] === "nickName"){
+				final_nickName = findcookie[1];
+				final_nickName = decodeURI(final_nickName);
+				final_nickName = decodeURI(final_nickName);
+			}
+			if(findcookie[0] === "username"){
+				final_username = findcookie[1];
+			}
+			if(findcookie[0] === "mail"){
+				final_mail = findcookie[1];
+			}
+		}
+		if(final_username.length==0 && final_mail.length==0 && final_nickName.length==0){
+			document.getElementById("nick").innerHTML = '<h3>您好！请<span><a href="login.html">登录</a> / <a href="register.html">注册</a></span></h3>';
+		}
+		else{
+			document.getElementById("nick").innerHTML = '<h3>欢迎您！<span><a href="personnal.html">' + final_nickName + '</a>&nbsp&nbsp<a id="logout" href="#">注销</a> / <a href="register.html">注册</a></span></h3>';
+		}
+	</script> 
+    <script>
+		$(document).ready(function(){
+			$("#logout").click(function(){
+				swal({
+  					title: "您确定要退出吗？",
+  					text: "系统将清空您的登录信息！",
+  					type: "warning",
+  					showCancelButton: true,
+  					confirmButtonColor: "#DD6B55",
+  					confirmButtonText: "确认退出",
+  					cancelButtonText: "取消",
+  					closeOnConfirm: false,
+  					closeOnCancel: false
+					},
+					function(isConfirm){
+  						if (isConfirm) {
+    						$.ajax({
+								type: "post",
+								data: "",
+								dataType: "json",
+								url: "./user/logout",
+								success: function(msg){
+									if(msg.success == true){
+										swal({
+											title: "已退出",
+											text: "已成功退出登录！",
+											type: "success",
+											closeOnConfirm: true,
+											},
+											function(){
+												setTimeout(function(){
+													history.go(0);
+												},0);
+										});
+									}
+									else{
+										swal("错误信息！","退出失败！","error");
+									}
+								},
+								error: function(msg){
+									swal("错误信息！","退出失败！","error");
+								}
+							});
+  						}else{
+    						swal("已取消", "您已取消退出", "success");
+  						}
+				});
+			})
+		})	
+	</script> 
+  </div>
+  <form id="form1" enctype="multipart/form-data" method="post" action="./file/upload">
+    <div class="row">
+      <label for="file">
+      <h1 class="h1">请在计算机中选择一个文件进行上传</h1>
+      </label>
+      <input type="file" class="file" name="file" id="file" accept=".stl" onchange="fileSelected();"/>
+    </div>
+    <div id="fileName"></div>
+    <div id="fileSize"></div>
+    <div id="fileType"></div>
+    <div class="row">
+      <input type="text" class="text" id="input" placeholder="验证码:（不区分大小写）"/>
+      <input type="button" id="checkCode" class="code" onclick="createCode()"/>
+      <a href="#" onclick="createCode()">看不清楚,换一张</a><br>
+      <input type="button" class="button" onclick="uploadFile()" value="上传" />
+    </div>
+    <div id="progressNumber"></div>
+  </form>
+  <script>
+      function fileSelected(){  
+	  	  var file = document.getElementById('file').files[0];  
+		  if (file){  
+			  var fileSize = 0;  
+				  if (file.size > 1024 * 1024){  
+					fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB'; 
+				  } 
+				  else{  
+					fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';  
+				  }
+				  document.getElementById('fileName').innerHTML = '文件名：' + file.name;  
+				  document.getElementById('fileSize').innerHTML = '文件大小：' + fileSize;  
+				  document.getElementById('fileType').innerHTML = '文件类型：' + file.type;  
+		  }  
+     }  
+  
+     function uploadFile(){ 
+		 var checkcode = document.getElementById("input").value;
+		 if (checkcode.length == 0) {
+			 swal("错误信息！","请输入验证码！","error");
+			 createCode();
+			 return false;
+		 }
+		 else if(checkcode.toUpperCase() != code.toUpperCase()) {    
+        	 swal("错误信息！","验证码输入错误！","error");    
+        	 createCode(); 
+			 return false;
+		 } 
+		 createCode();
+         var file = new FormData(); 
+		 if(document.getElementById('file').files[0] == null){
+			 swal("错误信息！","文件不能为空！","error");
+			 return false;
+		 }
+		 file.append("file", document.getElementById('file').files[0]);  
+		 var xhr = new XMLHttpRequest(); 
+			 
+		 xhr.addEventListener("progress", uploadProgress, false); 
+		 function uploadProgress(evt) {  
+			 if(evt.lengthComputable) {  
+				 var percentComplete = Math.round(evt.loaded * 100 / evt.total);  
+				 document.getElementById('progressNumber').innerHTML = percentComplete.toString()+'%';  
+			 }  
+			 else {  
+				 document.getElementById('progressNumber').innerHTML = '无法计算';  
+			 }  
+		 } 
+			  
+		 xhr.addEventListener("load", uploadComplete, false);
+		 function uploadComplete(evt) {   
+			 if(xhr.readyState == 4){
+				 if(xhr.status == 200){
+					 var get_response = JSON.parse(xhr.responseText);
+					 if(get_response.message == '请先登录'){
+						 swal("错误信息！","请先登录！","error");
+					 }
+					 else if(get_response.message == '文件为空或上传出错' || get_response.success == false){
+						 swal("错误信息！","文件是空的或者上传失败!","error");
+					 }
+					 else if(get_response.message == '您今日的文件上传数量已达到最大'){
+						 swal("错误信息！","您今日上传文件数量已达最大！","error");
+					 }
+					 else{
+						 swal({
+						     title: "上传成功！",
+							 text: "点击继续",
+							 type: "success",
+							 closeOnConfirm: true,
+							 },
+							 function(){
+								 setTimeout(function(){
+								 	 history.go(0);
+								 },0);
+							});
+					 }
+				 }
+				 else{
+					 swal("错误信息！","请求失败！","error");
+				 }
+			 }
+		 } 
+			   
+		 xhr.addEventListener("error", uploadFailed, false);
+		 function uploadFailed(evt) {  
+			 swal("错误信息！","上传文件时遇到错误！","error");  
+		 }
+			   
+		 xhr.addEventListener("abort", uploadCanceled, false);
+		 function uploadCanceled(evt) {  
+			 swal("错误信息！","上传被取消或网络连接已断开！","error");  
+		 } 
+			  
+		 xhr.open("POST", "./file/upload");  
+		 xhr.send(file);
+      }      
+  </script> 
+</div>
+<div class="upload-bottom"> <a href="index.html">返回主页</a> </div>
+<script src="js/checkCode.js"></script>
+</body>
+</html>

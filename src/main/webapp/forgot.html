@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/forgot.css"/>
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<script src="js/sweetalert.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<title>忘记密码-慧诺教育科技</title>
+</head>
+
+<body>
+<header class="header">
+  <h1 align="center">用户找回密码</h1>
+</header>
+<div class="main">
+  <h5>修改密码</h5>
+  <hr width="90%" color="#CCCCCC">
+  <div class="form1">
+    <p>新密码：</p>
+    <input type="password" maxlength="16" id="password"/>
+    <p>确认新密码：</p>
+    <input type="password" maxlength="16" id="confirm_password"/>
+    <p>用户名：</p>
+    <input type="text" maxlength="16" id="username"/>
+    <p>手机号码：</p>
+    <input type="tel" maxlength="11" id="phone"/>
+    <p>验证码：</p>
+    <input type="text" id="checkcode"/>
+    <input type="button" class="button" id="getcode" value="获取验证码"/>
+    <script>
+		$(document).ready(function() {
+           $("#getcode").click(function(){
+			   var username = $("#username").val();
+			   var phone = $("#phone").val();
+			   if(username.length == 0){
+				   swal("错误信息！","请输入用户名！","error");
+				   return false;
+			   }
+			   if(phone.length == 0){
+				   swal("错误信息！","请输入手机号！","error");
+				   return false;
+			   }
+			   var phonecheck1=new RegExp(/^1[0-9]{10}$/);
+			   var phonecheck2=phone.match(phonecheck1);
+			   if(!phonecheck2){
+			       swal("错误信息！","请输入正确的手机号格式！","error");
+				   return false;
+			   }
+			   var data={
+				    username:username,
+				    phone:phone
+			   };
+			   $.ajax({
+				   type:'get',
+				   data:data,
+				   url:"./user/forget_password",
+				   dataType:'json',
+				   success: function(msg){
+					   if(msg.message == '不存在的用户'){
+						   swal("错误信息！","不存在的用户！","error");
+						   return false;
+					   }
+					   if(msg.message == '手机号码和用户名不匹配'){
+						   swal("错误信息！","手机号码和用户名不匹配！","error");
+						   return false;
+					   }
+					   if(msg.respCode == '00104'){
+						   swal("错误信息！","该手机今日接收短信条数已达上限！","error");
+						   return false;
+					   }
+					   if(msg.respCode == '00000'){
+						   var timedown = 60;
+						   $("#getcode").css({"background-color":"gray"});
+						   $("#getcode").attr({disabled:true , value:"重新发送(" + timedown + ")"});
+						   swal("成功信息！","短信已成功发送！","success");
+						   var clock;
+						   clock = setInterval(doloop, 1000);
+						   function doloop(){
+							   timedown--;
+							   if(timedown == 0){
+								   clearInterval(clock);
+								   $("#getcode").css({"background":"rgba(78, 197, 241, 0.81)"});
+						   		   $("#getcode").attr({disabled:false , value:"获取验证码"});
+								   timedown = 60;
+								   return;
+							   }
+							   else{
+								   $("#getcode").css({"background-color":"gray"});
+						   		   $("#getcode").attr({disabled:true , value:"重新发送(" + timedown + ")"});
+							   }
+						   }
+					   }
+					   else{
+						   swal("错误信息！","未知的错误发生了！","error");
+						   return false;
+					   }
+				   },
+				   error: function(msg){
+					   swal("错误信息！","请求失败","error");
+				   }
+			   })
+		   }) 
+        })
+	</script>
+  </div>
+</div>
+<div class="second">
+<input type="button" style="float:right" value="提交" class="button" id="confirm"/>
+<script>
+$(document).ready(function(e) {
+    $("#confirm").click(function(){
+		var newPassword = $("#password").val();
+		var confirm_password = $("#confirm_password").val();
+		var username = $("#username").val();
+		var check_code = $("#checkcode").val();
+		if(newPassword.length == 0){
+			swal("错误信息！","请输入新密码！","error");
+			return false;
+		}
+		if(newPassword.length<8 || newPassword.length>16){
+			swal("错误信息！","密码长度为8至16","error");
+		}
+		if(username.length == 0){
+			swal("错误信息！","请输入用户名！","error");
+			return false;
+		}
+		if(confirm_password != newPassword){
+			swal("错误信息！","两次密码输入不一致！","error");
+			return false;
+		}
+		if(check_code.length == 0){
+			swal("错误信息！","请输入验证码！","error");
+			return false;
+		}
+		var data = {
+			username:username,
+			newPassword:hex_md5(newPassword),
+			check_code:check_code
+		};
+		$.ajax({
+			type:'post',
+			data:data,
+			url:"./user/change_password",
+			dataType:"json",
+			success: function(msg){
+				if(msg.message == '验证码输入错误'){
+					swal("错误信息！","验证码错误！","error");
+					return false;
+				}
+				if(msg.message == '验证码已过期'){
+					swal("错误信息！","验证码已过期！","error");
+					return false;
+				}
+				if(msg.success == true){
+					swal({
+						title: "修改成功！",
+						text: "密码已成功修改",
+						type: "success",
+						closeOnConfirm: true,
+						},
+						function(){
+							setTimeout(function(){
+							window.location.href="login.html";
+							},0);
+					});
+				}
+				if(msg.success == false){
+					swal("错误信息！","修改失败！","error");
+					return false;
+				}
+			},
+			error: function(){
+				swal("错误信息！","请求失败！","error");
+				return false;
+			}
+		});
+	})
+});
+</script>
+</div>
+<script src="js/md5.js"></script>
+</body>
+</html>

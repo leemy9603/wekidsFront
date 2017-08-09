@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人比赛信息-慧诺教育科技</title>
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"> </script>
+<script src="js/sweetalert.min.js"></script>
+</head>
+
+<body style="background:url(images/banner.jpg) no-repeat; background-size:cover">
+<script>
+	$(window).load(function(){
+		$.ajax({
+			type:"get",
+			data:"",
+			dataType:"json",
+			url:"./match/show_my_match_message",
+			success: function(msg){
+				if(msg.message == "您未参与比赛报名"){
+					swal({
+						title: "错误信息！",
+						text: "您还没有报名！",
+						type: "error",
+						closeOnConfirm: true,
+						},
+						function(){
+							setTimeout(function(){
+								window.location.href="personnal.html";
+								},0);
+						});
+					return false;
+				}
+				var realName = msg.realName;
+				var phone = msg.phone;
+				var email = msg.email;
+				var wechat = msg.wechat;
+				var school = msg.school;
+				var group = msg.clazz;
+				$("#school").append(school + "  （点击修改）");
+				$("#realName").append(realName + "  （点击修改）");
+				$("#group").append(group + "  （点击修改）");
+				$("#email").append(email + "  （点击修改）");
+				$("#wechat").append(wechat + "  （点击修改）");
+				$("#phone").append(phone + "  （点击修改）");
+			},
+			error: function(){
+				swal("错误信息！","未知的错误发生了","error");
+			}
+		})
+	})
+</script>
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <h3 class="text-center"> 个人报名信息 </h3>
+      <div class="row clearfix">
+        <div class="col-md-4 column"> </div>
+        <div class="col-md-4 column">
+          <div class="panel-group" id="panel-473790">
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="school" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-473790" href="#panel-element-97818">学校：</a> </div>
+              <div id="panel-element-97818" class="panel-collapse collapse">
+                <div class="panel-body"><span>学校：<input id="changeSchool" type="text"/></span></div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="group" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-473790" href="#panel-element-382370">班级：</a> </div>
+              <div id="panel-element-382370" class="panel-collapse collapse">
+                <div class="panel-body"><span>班级：<input id="changeClass" type="text"/></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-group" id="panel-780496">
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="realName" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-780496" href="#panel-element-837296">真实姓名：</a> </div>
+              <div id="panel-element-837296" class="panel-collapse collapse">
+                <div class="panel-body"><span>真实姓名：<input id="changeRealName" type="text"/></span></div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="wechat" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-780496" href="#panel-element-339784">微信号：</a> </div>
+              <div id="panel-element-339784" class="panel-collapse collapse">
+                <div class="panel-body"><span>微信号：<input id="changeWechat" type="text"/></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-group" id="panel-271078">
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="phone" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-271078" href="#panel-element-20960">手机号：</a> </div>
+              <div id="panel-element-20960" class="panel-collapse collapse">
+                <div class="panel-body"><span>手机号：<input id="changePhone" type="text"/></span></div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading"> <a id="email" class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-271078" href="#panel-element-679862">邮箱：</a> </div>
+              <div id="panel-element-679862" class="panel-collapse collapse">
+                <div class="panel-body"><span>邮箱：<input id="changeEmail" type="text"/></span></div>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="change" class="btn btn-default btn-primary btn-block">确认修改</button>
+          <script>
+		      $("#change").click(function(){
+				  var school = $("#changeSchool").val();
+				  var group = $("#changeClass").val();
+				  var realName = $("#changeRealName").val();
+				  var wechat = $("#changeWechat").val();
+				  var phone = $("#changePhone").val();
+				  var mail = $("#changeEmail").val();
+				  var data={
+					  realName:realName,
+					  phone:phone,
+					  email:mail,
+					  wechat:wechat,
+					  school:school,
+					  group:group
+				  }
+				  swal({
+  					title: "您确定要修改吗？",
+  					text: "系统将更新您的报名信息！",
+  					type: "warning",
+  					showCancelButton: true,
+  					confirmButtonColor: "#DD6B55",
+  					confirmButtonText: "确认修改",
+  					cancelButtonText: "取消",
+  					closeOnConfirm: false,
+  					closeOnCancel: false
+					},
+					function(isConfirm){
+  						if (isConfirm) {
+    						$.ajax({
+							  type:"post",
+							  url:"./match/update_match_message",
+							  data:data,
+							  dataType:"json",
+							  success: function(msg){
+								  if(msg.success == true){
+									  swal({
+										  title: "修改成功！",
+										  text: "点击确定查看报名信息！",
+										  type: "success",
+										  closeOnConfirm: true,
+										  },
+										  function(){
+											  setTimeout(function(){
+											  window.location.href="match_message.html";
+											  },0);
+										  });
+								  }
+								  else{
+									  swal("错误信息！","修改失败！","error");
+								  }
+							  },
+							  error: function(msg){
+								  swal("错误信息！","未知的错误发生了！","error");
+							  }
+						  })
+  						}else{
+    						swal("已取消", "您已取消修改", "success");
+  						}
+			      });
+			  })
+		  </script>
+          <button type="button" onclick="window.location.href='index.html'" class="btn btn-default btn-primary btn-block">返回主页</button>
+        </div>
+        <div class="col-md-4 column"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

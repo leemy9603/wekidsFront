@@ -1,0 +1,128 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title>用户登录-慧诺教育科技</title>
+<!-- Custom Theme files -->
+<link href="css/login.css" rel="stylesheet" type="text/css" media="all"/>
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<link rel="shortcut icon" href="images/index.ico"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="js/sweetalert.min.js"></script>
+<script src="js/event.js"></script>
+</head>
+<body>
+<div class="login">
+  <h2>用户登录</h2>
+  <div class="login-top">
+    <h1>您好！请登录</h1>
+    <form>
+      <input type="text" id="username" autocomplete="on" autofocus placeholder="用户名/手机号/邮箱">
+      <input type="password" id="pwd" maxlength="16" placeholder="密码">
+      <input type="text" id="input" placeholder="验证码（不区分大小写）">
+      <input type="button" id="checkCode" class="code" onclick="createCode()"/>
+      <a href="#" onclick="createCode()">看不清楚,换一张</a><br>
+    </form>
+    <div class="forgot"> <a href="forgot.html">忘记密码</a>
+      <input type="button" class="button" value="登录" id="login">
+    </div>
+    <script>
+		var final_username = "";
+		var final_mail = "";
+		var final_nickName = "";
+		var totalcookie = document.cookie.split("; ");
+		for(i=0 ; i<totalcookie.length ; i++){
+			var findcookie = totalcookie[i].split("=");
+			if(findcookie[0] === "nickName"){
+				final_nickName = findcookie[1];
+				final_nickName = decodeURI(final_nickName);
+				final_nickName = decodeURI(final_nickName);
+			}
+			if(findcookie[0] === "username"){
+				final_username = findcookie[1];
+			}
+			if(findcookie[0] === "mail"){
+				final_mail = findcookie[1];
+			}
+		}
+		if(final_username.length!=0 && final_mail.length!=0 && final_nickName.length!=0){
+			alert("系统检测到您已经登录，请点击确定继续");
+			window.location.href = "personnal.html";
+		}
+		
+		var login = document.getElementById('login');
+        EventUtil.addHandler(login, 'click', function () {
+			var username = document.getElementById('username').value;
+			if(username.length == 0){
+				swal("错误信息！","请输入用户名！","error");
+				return false;
+			}
+					  
+			var password = document.getElementById('pwd').value;
+			if(password.length == 0){
+				swal("错误信息！","请输入密码！","error");
+				return false;
+			}
+					  
+			var checkcode = document.getElementById("input").value;
+			if (checkcode.length == 0) {
+				swal("错误信息！","请输入验证码！","error");
+				createCode();
+				return false;
+			}else if(checkcode.toUpperCase() != code.toUpperCase()) {    
+				swal("错误信息！","验证码输入错误！","error");    
+				createCode(); 
+				return false;
+			}
+			createCode();
+					  
+			var hash = hex_md5(password);
+	
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function (){
+				if (request.readyState === 4){
+					if (request.status === 200){
+						var get_response = JSON.parse(request.responseText);
+						if (get_response.message === '用户名或密码输入错误'){
+							swal("错误信息！","用户名或密码错误,请确认并重新输入！","error");
+							return false;
+						}
+						else if(get_response.success === false){
+							swal("错误信息！","登录失败！","error");
+							return false;
+						}
+						else {
+							swal({
+								title: "登陆成功！",
+								text: "点击确定进入个人中心",
+								type: "success",
+								closeOnConfirm: true,
+								},
+								function(){
+									setTimeout(function(){
+								      	window.location.href="personnal.html";
+								  	},0);
+							});
+						}
+					}
+					else{
+						swal("错误信息！","登录请求失败！","error");
+					}
+				}
+			}
+			request.open('POST','./user/login');
+			var data = 'username=' + username + '&password=' + hash;
+			request.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			request.send(data);
+  		})
+  </script> 
+  </div>
+  <div class="login-bottom">
+    <h3>新用户 &nbsp;<a href="register.html">点这里</a>&nbsp 注册</h3>
+  </div>
+</div>
+<script src="js/checkCode.js"></script> 
+<script src="js/md5.js"></script>
+</body>
+</html>
